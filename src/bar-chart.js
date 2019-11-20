@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { Svg, Rect, G } from "react-native-svg";
 import AbstractChart from "./abstract-chart";
 
-const barWidth = 32;
+const globalBarWidth = 24;
 
 class BarChart extends AbstractChart {
   getBarPercentage = () => {
@@ -16,7 +16,7 @@ class BarChart extends AbstractChart {
     const baseHeight = this.calcBaseHeight(data, height);
     return data.map((x, i) => {
       const barHeight = this.calcHeight(x, data, height);
-      const barWidth = 32 * this.getBarPercentage();
+      const barWidth = globalBarWidth * this.getBarPercentage();
       return (
         <Rect
           key={Math.random()}
@@ -42,7 +42,7 @@ class BarChart extends AbstractChart {
     const baseHeight = this.calcBaseHeight(data, height);
     return data.map((x, i) => {
       const barHeight = this.calcHeight(x, data, height);
-      const barWidth = 32 * this.getBarPercentage();
+      const barWidth = globalBarWidth * this.getBarPercentage();
       return (
         <Rect
           key={Math.random()}
@@ -120,7 +120,7 @@ class BarChart extends AbstractChart {
                   labels: data.labels,
                   paddingRight,
                   paddingTop,
-                  horizontalOffset: barWidth * this.getBarPercentage()
+                  horizontalOffset: globalBarWidth * this.getBarPercentage()
                 })
               : null}
           </G>

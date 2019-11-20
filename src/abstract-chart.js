@@ -42,8 +42,8 @@ class AbstractChart extends Component {
   getPropsForBackgroundLines() {
     const { propsForBackgroundLines = {} } = this.props.chartConfig;
     return {
-      stroke: this.props.chartConfig.color(0.2),
-      strokeDasharray: "5, 10",
+      stroke: this.props.chartConfig.dashLineColor(),
+      strokeDasharray: "4, 4",
       strokeWidth: 1,
       ...propsForBackgroundLines
     };
@@ -100,7 +100,9 @@ class AbstractChart extends Component {
       paddingTop,
       paddingRight,
       horizontalLabelRotation = 0,
-      formatYLabel = yLabel => yLabel
+      formatYLabel = yLabel => yLabel,
+      usePercentage,
+      total,
     } = config;
     const {
       yAxisLabel = "",
@@ -112,9 +114,9 @@ class AbstractChart extends Component {
     return [...new Array(count)].map((_, i) => {
       let yLabel;
 
-      if (count === 1) {
+      if (count === 1 || usePercentage) {
         yLabel = `${yAxisLabel}${formatYLabel(
-          data[0].toFixed(decimalPlaces)
+          (data[0] / total * 100).toFixed(decimalPlaces)
         )}${yAxisSuffix}`;
       } else {
         const label = this.props.fromZero
@@ -252,6 +254,14 @@ class AbstractChart extends Component {
       ? config.fillShadowGradientOpacity
       : 0.1;
 
+    const barBottomColor = config.hasOwnProperty('barBottomColor')
+      ? config.barBottomColor()
+      : this.props.chartConfig.color();
+    
+    const barTopColor = config.hasOwnProperty('barTopColor')
+      ? config.barTopColor()
+      : this.props.chartConfig.color();
+
     return (
       <Defs>
         <LinearGradient
@@ -279,12 +289,8 @@ class AbstractChart extends Component {
           x2={0}
           y2={height}
         >
-          <Stop
-            offset="0"
-            stopColor={fillShadowGradient}
-            stopOpacity={fillShadowGradientOpacity}
-          />
-          <Stop offset="1" stopColor={fillShadowGradient} stopOpacity="0" />
+          <Stop offset="0" stopColor={barTopColor} stopOpacity={1} />
+          <Stop offset="1" stopColor={barBottomColor} stopOpacity={1} />
         </LinearGradient>
       </Defs>
     );
