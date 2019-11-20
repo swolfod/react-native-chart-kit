@@ -101,8 +101,6 @@ class AbstractChart extends Component {
       paddingRight,
       horizontalLabelRotation = 0,
       formatYLabel = yLabel => yLabel,
-      usePercentage,
-      total,
     } = config;
     const {
       yAxisLabel = "",
@@ -110,22 +108,30 @@ class AbstractChart extends Component {
       yLabelsOffset = 12,
       chartConfig
     } = this.props;
-    const { decimalPlaces = 2 } = chartConfig;
+    const { decimalPlaces = 2, usePercentage, total } = chartConfig;
     return [...new Array(count)].map((_, i) => {
       let yLabel;
 
-      if (count === 1 || usePercentage) {
+      if (usePercentage) {
         yLabel = `${yAxisLabel}${formatYLabel(
-          (data[0] / total * 100).toFixed(decimalPlaces)
+          (data[i] / total * 100).toFixed(decimalPlaces)
         )}${yAxisSuffix}`;
       } else {
-        const label = this.props.fromZero
-          ? (this.calcScaler(data) / (count - 1)) * i + Math.min(...data, 0)
-          : (this.calcScaler(data) / (count - 1)) * i + Math.min(...data);
-        yLabel = `${yAxisLabel}${formatYLabel(
-          label.toFixed(decimalPlaces)
-        )}${yAxisSuffix}`;
+        if (count === 1 ) {
+          yLabel = `${yAxisLabel}${formatYLabel(
+            (data[i]).toFixed(decimalPlaces)
+          )}${yAxisSuffix}`;
+        } else {
+          const label = this.props.fromZero
+            ? (this.calcScaler(data) / (count - 1)) * i + Math.min(...data, 0)
+            : (this.calcScaler(data) / (count - 1)) * i + Math.min(...data);
+          yLabel = `${yAxisLabel}${formatYLabel(
+            label.toFixed(decimalPlaces)
+          )}${yAxisSuffix}`;
+        }
       }
+
+      
 
       const x = paddingRight - yLabelsOffset;
       const y =
