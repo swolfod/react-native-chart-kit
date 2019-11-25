@@ -1,6 +1,6 @@
 {
   "name": "react-native-chart-kit-lushu",
-  "version": "3.13.0b",
+  "version": "3.13.0c",
   "devDependencies": {
     "babel-eslint": "10.x",
     "babel-plugin-module-resolver": "^3.1.1",
